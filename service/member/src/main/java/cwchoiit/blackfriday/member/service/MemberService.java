@@ -21,8 +21,8 @@ public class MemberService {
     public MemberReadResponse create(CreateMemberRequest request) {
         Member createdMember = memberRepository.save(
                 Member.of(
-                        request.getLoginId(),
-                        request.getUsername()
+                        request.loginId(),
+                        request.username()
                 )
         );
 
