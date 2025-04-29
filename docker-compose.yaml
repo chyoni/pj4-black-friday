@@ -19,6 +19,15 @@ services:
     depends_on:
       - mysql
 
+  payment-service:
+    hostname: payment-service
+    container_name: payment-service
+    image: blackfriday-payment-service
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql
+
   kafka1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka1
