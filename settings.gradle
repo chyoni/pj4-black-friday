@@ -1,0 +1,3 @@
+rootProject.name = 'pj4-blackfriday'
+
+include ':service:member'

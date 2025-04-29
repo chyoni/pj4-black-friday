@@ -1,0 +1,104 @@
+version: "3.8"
+
+services:
+  mysql:
+    hostname: mysql
+    container_name: mysql
+    image: mysql:8.0.38
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+
+  member-service:
+    hostname: member-service
+    container_name: member-service
+    image: blackfriday-member-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+
+  kafka1:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka1
+    container_name: kafka1
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_KRAFT_MODE: "true"
+      CLUSTER_ID: "bTml43pHSrOeU7rGcBv5hg"
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_LISTENERS: "INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka1:9092,EXTERNAL://localhost:19092,CONTROLLER://kafka1:9093"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+    networks:
+      - kafka-net
+
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka2
+    container_name: kafka2
+    ports:
+      - "19093:19093"
+    environment:
+      KAFKA_KRAFT_MODE: "true"
+      CLUSTER_ID: "bTml43pHSrOeU7rGcBv5hg"
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_NODE_ID: 2
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_LISTENERS: "INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19093,CONTROLLER://0.0.0.0:9093"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka2:9092,EXTERNAL://localhost:19093,CONTROLLER://kafka2:9093"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+    networks:
+      - kafka-net
+
+  kafka3:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka3
+    container_name: kafka3
+    ports:
+      - "19094:19094"    # EXTERNAL - 외부 클라이언트 접속용
+    environment:
+      KAFKA_KRAFT_MODE: "true" # KRaft 모드 (Zookeeper 없이 스스로 메타데이터 관리)
+      CLUSTER_ID: "bTml43pHSrOeU7rGcBv5hg"
+      KAFKA_PROCESS_ROLES: "broker,controller" # 브로커(데이터 주고 받는 역할[토픽, 메시지 등]), 컨트롤러(메타데이터 관리, 리더 선출 등) 역할 둘 다 수행
+      KAFKA_NODE_ID: 3 # 고유 ID = 3
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093" # 컨트롤러 선출 및 메타데이터 복제할 서버들 지정
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT" # 각 리스너(INTERNAL, EXTERNAL, CONTROLLER)가 어떤 보안 프로토콜로 통신하는지 정의 (PLAINTEXT = 그냥 암호화 없이 평문 통신)
+      KAFKA_LISTENERS: "INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19094,CONTROLLER://0.0.0.0:9093" # INTERNAL ➔ 브로커끼리 통신할 때 사용 (9092) | EXTERNAL ➔ 외부 클라이언트용 (19094) | CONTROLLER ➔ 컨트롤러끼리 메타데이터 교환용 (9093)
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka3:9092,EXTERNAL://localhost:19094,CONTROLLER://kafka3:9093" # Kafka가 외부에 "나를 이렇게 불러줘" 라고 광고하는 주소. INTERNAL 통신 ➔ 브로커끼리는 kafka3:9092, EXTERNAL 통신 ➔ 클라이언트가 localhost:19094로 접속, CONTROLLER 통신 ➔ 컨트롤러 끼리는 kafka3:9093 접속
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL" # 카프카 브로커들끼리 통신할 때 INTERNAL로 통신하도록 지정
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER" # 컨트롤러끼리 통신할 때 사용할 리스너 이름 지정
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs" # Kafka 데이터와 메타데이터 저장할 경로, 나중에 운영환경에서는 /var/lib/kafka/data 같은 경로로 바꿔주는게 좋다.
+    networks:
+      - kafka-net
+
+  cassandra-node-0:
+    image: cassandra
+    container_name: cassandra-node-0
+    hostname: cassandra-node-0
+    environment:
+      - CASSANDRA_DC=datacenter11
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra-node-0
+    ports:
+      - "9042:9042"
+    networks:
+      cassandra-net:
+        aliases:
+          - cassandra-node-0
+
+networks:
+  cassandra-net:
+    driver: bridge
+  kafka-net:
+    driver: bridge
