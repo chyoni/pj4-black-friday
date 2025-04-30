@@ -28,6 +28,15 @@ services:
     depends_on:
       - mysql
 
+  delivery-service:
+    hostname: delivery-service
+    container_name: delivery-service
+    image: blackfriday-delivery-service
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+
   kafka1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka1

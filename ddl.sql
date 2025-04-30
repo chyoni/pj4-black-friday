@@ -26,3 +26,26 @@ create table payment_method
     credit_card_number varchar(100) not null comment '신용 카드 번호'
 );
 create index idx_member_id on payment_method (member_id);
+
+create table member_address
+(
+    member_address_id bigint       not null auto_increment primary key,
+    member_id         bigint       not null comment '멤버 ID',
+    address           varchar(255) not null comment '멤버 주소',
+    alias             varchar(50)  not null comment '별칭'
+);
+create index idx_member_id on member_address (member_id);
+
+create table delivery
+(
+    delivery_id bigint not null auto_increment primary key,
+    order_id bigint not null comment '주문 ID',
+    product_name varchar(255) not null comment '주문 상품명',
+    product_count integer not null comment '주문 상품 개수',
+    address varchar(255) not null comment '배송지',
+    delivery_status varchar(50) not null comment '배송 상태',
+    delivery_vendor varchar(50) not null comment '배송 대행업체',
+    reference_code integer not null unique comment '배송 대행업체 응답 코드'
+);
+create index idx_order_id on delivery (order_id);
+create index idx_delivery_status on delivery (delivery_status);
