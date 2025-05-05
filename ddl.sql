@@ -38,14 +38,20 @@ create index idx_member_id on member_address (member_id);
 
 create table delivery
 (
-    delivery_id bigint not null auto_increment primary key,
-    order_id bigint not null comment '주문 ID',
-    product_name varchar(255) not null comment '주문 상품명',
-    product_count integer not null comment '주문 상품 개수',
-    address varchar(255) not null comment '배송지',
-    delivery_status varchar(50) not null comment '배송 상태',
-    delivery_vendor varchar(50) not null comment '배송 대행업체',
-    reference_code integer not null unique comment '배송 대행업체 응답 코드'
+    delivery_id     bigint       not null auto_increment primary key,
+    order_id        bigint       not null comment '주문 ID',
+    product_name    varchar(255) not null comment '주문 상품명',
+    product_count   integer      not null comment '주문 상품 개수',
+    address         varchar(255) not null comment '배송지',
+    delivery_status varchar(50)  not null comment '배송 상태',
+    delivery_vendor varchar(50)  not null comment '배송 대행업체',
+    reference_code  integer      not null unique comment '배송 대행업체 응답 코드'
 );
 create index idx_order_id on delivery (order_id);
 create index idx_delivery_status on delivery (delivery_status);
+
+create table seller_product
+(
+    product_id bigint not null auto_increment primary key,
+    seller_id  bigint not null comment '판매자 ID'
+);

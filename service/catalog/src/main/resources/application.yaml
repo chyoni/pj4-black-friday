@@ -1,0 +1,49 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  cassandra:
+    keyspace-name: catalog
+    port: 9042
+    contact-points: 127.0.0.1
+    local-datacenter: datacenter11
+    schema-action: create_if_not_exists
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/black_friday?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+client:
+  search-service:
+    url: http://localhost:8080
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: staging
+  cassandra:
+    keyspace-name: catalog
+    port: 9042
+    contact-points: cassandra-node-0
+    local-datacenter: datacenter11
+    schema-action: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/black_friday?useSSL=false&allowPublicKeyRetrieval=true # Docker 로 띄운 MySQL 서비스 이름: mysql
+    username: root
+    password: root
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+client:
+  search-service:
+    url: http://search-service:8080
