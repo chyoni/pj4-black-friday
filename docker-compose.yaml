@@ -44,6 +44,15 @@ services:
     depends_on:
       - mysql
 
+  search-service:
+    hostname: search-service
+    container_name: search-service
+    image: blackfriday-search-service
+    ports:
+      - "8084:8080"
+    depends_on:
+      - redis
+
   kafka1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka1
