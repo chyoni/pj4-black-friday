@@ -38,8 +38,8 @@ spring:
 
 client:
   catalog-service:
-    url: http://catalog-service:8085
+    url: http://catalog-service:8080
   delivery-service:
-    url: http://delivery-service:8083
+    url: http://delivery-service:8080
   payment-service:
-    url: http://localhost:8082
+    url: http://payment-service:8080
