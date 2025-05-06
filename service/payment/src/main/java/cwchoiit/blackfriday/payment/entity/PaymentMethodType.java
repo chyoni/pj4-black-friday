@@ -3,6 +3,8 @@ package cwchoiit.blackfriday.payment.entity;
 import lombok.Getter;
 import lombok.ToString;
 
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.INVALID_PAYMENT_METHOD;
+
 @Getter
 @ToString
 public enum PaymentMethodType {
@@ -19,7 +21,7 @@ public enum PaymentMethodType {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Invalid payment method type: " + paymentMethod);
+        throw INVALID_PAYMENT_METHOD.build(paymentMethod);
     }
 
     public static PaymentMethodType findBy(PaymentMethodType paymentMethod) {
@@ -28,6 +30,6 @@ public enum PaymentMethodType {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Invalid payment method type: " + paymentMethod);
+        throw INVALID_PAYMENT_METHOD.build(paymentMethod);
     }
 }

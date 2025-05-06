@@ -6,7 +6,9 @@ import cwchoiit.blackfriday.order.service.request.StartOrderRequest;
 import cwchoiit.blackfriday.order.service.response.ProductOrderDetailReadResponse;
 import cwchoiit.blackfriday.order.service.response.ProductOrderReadResponse;
 import cwchoiit.blackfriday.order.service.response.StartOrderResponse;
+import cwchoiit.blackfriday.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +21,22 @@ public class ProductOrderController {
     private final ProductOrderService productOrderService;
 
     @PostMapping("/start-order")
-    public StartOrderResponse startOrder(@RequestBody StartOrderRequest request) {
-        return productOrderService.startOrder(request);
+    public ResponseEntity<ApiResponse<StartOrderResponse>> startOrder(@RequestBody StartOrderRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(productOrderService.startOrder(request)));
     }
 
     @PostMapping("/finish-order")
-    public ProductOrderDetailReadResponse finishOrder(@RequestBody FinishOrderRequest request) {
-        return productOrderService.finishOrder(request);
+    public ResponseEntity<ApiResponse<ProductOrderDetailReadResponse>> finishOrder(@RequestBody FinishOrderRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(productOrderService.finishOrder(request)));
     }
 
     @GetMapping("/members/{memberId}/orders")
-    public List<ProductOrderReadResponse> findOrdersByMember(@PathVariable("memberId") Long memberId) {
-        return productOrderService.findOrdersByMemberId(memberId);
+    public ResponseEntity<ApiResponse<List<ProductOrderReadResponse>>> findOrdersByMember(@PathVariable("memberId") Long memberId) {
+        return ResponseEntity.ok(ApiResponse.ok(productOrderService.findOrdersByMemberId(memberId)));
     }
 
     @GetMapping("/{orderId}")
-    public ProductOrderDetailReadResponse findOrder(@PathVariable("orderId") Long orderId) {
-        return productOrderService.findOrderDetail(orderId);
+    public ResponseEntity<ApiResponse<ProductOrderDetailReadResponse>> findOrder(@PathVariable("orderId") Long orderId) {
+        return ResponseEntity.ok(ApiResponse.ok(productOrderService.findOrderDetail(orderId)));
     }
 }

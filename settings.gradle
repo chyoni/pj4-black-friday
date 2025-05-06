@@ -6,3 +6,6 @@ include ':service:delivery'
 include ':service:search'
 include ':service:catalog'
 include ':service:order'
+
+include ':common:exception'
+include ':common:response'

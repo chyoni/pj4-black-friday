@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -47,7 +49,8 @@ public class PaymentService {
 
     @Transactional
     public PaymentReadResponse processPayment(ProcessPaymentRequest request) {
-        PaymentMethod paymentMethod = paymentMethodRepository.findById(request.paymentMethodId()).orElseThrow();
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(request.paymentMethodId())
+                .orElseThrow(() -> DOES_NOT_EXIST_PAYMENT_METHOD_BY_PAYMENT_METHOD_ID.build(request.paymentMethodId()));
         PaymentMethodType currentMethod = PaymentMethodType.findBy(paymentMethod.getMethodType());
         return PaymentReadResponse.of(processPay(request, currentMethod, paymentMethod));
     }
@@ -65,7 +68,7 @@ public class PaymentService {
     public PaymentReadResponse findPayment(Long paymentId) {
         return paymentRepository.findById(paymentId)
                 .map(PaymentReadResponse::of)
-                .orElseThrow();
+                .orElseThrow(() -> DOES_NOT_EXIST_PAYMENT.build(paymentId));
     }
 
     private Payment processPay(ProcessPaymentRequest request,
@@ -84,6 +87,6 @@ public class PaymentService {
                 ));
             }
         }
-        throw new IllegalArgumentException("Unsupported payment method type: " + currentMethod);
+        throw UNSUPPORTED_PAYMENT_METHOD.build(currentMethod.name());
     }
 }

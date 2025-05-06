@@ -2,7 +2,6 @@ package cwchoiit.blackfriday.delivery.service;
 
 import cwchoiit.blackfriday.delivery.adapter.DeliveryProcessor;
 import cwchoiit.blackfriday.delivery.entity.Delivery;
-import cwchoiit.blackfriday.delivery.entity.DeliveryVendor;
 import cwchoiit.blackfriday.delivery.entity.MemberAddress;
 import cwchoiit.blackfriday.delivery.repository.DeliverRepository;
 import cwchoiit.blackfriday.delivery.repository.MemberAddressRepository;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.*;
 
 @Slf4j
 @Service
@@ -60,13 +61,13 @@ public class DeliveryService {
     public DeliveryReadResponse findDelivery(Long deliveryId) {
         return deliverRepository.findById(deliveryId)
                 .map(DeliveryReadResponse::of)
-                .orElseThrow();
+                .orElseThrow(() -> DOES_NOT_EXIST_DELIVERY.build(deliveryId));
     }
 
     public MemberAddressReadResponse findMemberAddress(Long memberAddressId) {
         return memberAddressRepository.findById(memberAddressId)
                 .map(MemberAddressReadResponse::of)
-                .orElseThrow();
+                .orElseThrow(() -> DOES_NOT_EXIST_MEMBER_ADDRESS.build(memberAddressId));
     }
 
     public List<MemberAddressReadResponse> findMemberAddressByMemberId(Long memberId) {
@@ -81,6 +82,6 @@ public class DeliveryService {
                 return processor;
             }
         }
-        throw new IllegalArgumentException("Unsupported delivery vendor: " + request.vendor());
+        throw UNSUPPORTED_DELIVERY_VENDOR.build(request.vendor().name());
     }
 }

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.DOES_NOT_EXIST_MEMBER;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class MemberService {
 
     @Transactional
     public MemberReadResponse update(Long memberId, String changeUsername) {
-        Member findMember = memberRepository.findById(memberId).orElseThrow();
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> DOES_NOT_EXIST_MEMBER.build(memberId));
         findMember.changeUsername(changeUsername);
         return new MemberReadResponse(findMember.getMemberId(), findMember.getLoginId(), findMember.getUsername());
     }

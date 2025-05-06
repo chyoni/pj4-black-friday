@@ -7,7 +7,6 @@ import cwchoiit.blackfriday.order.entity.OrderStatus;
 import cwchoiit.blackfriday.order.entity.ProductOrder;
 import cwchoiit.blackfriday.order.repository.ProductOrderRepository;
 import cwchoiit.blackfriday.order.service.request.FinishOrderRequest;
-import cwchoiit.blackfriday.order.service.request.ProcessDeliveryRequest;
 import cwchoiit.blackfriday.order.service.request.StartOrderRequest;
 import cwchoiit.blackfriday.order.service.response.*;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.*;
 
 @Slf4j
 @Service
@@ -35,12 +36,12 @@ public class ProductOrderService {
         PaymentMethodReadResponse findPaymentMethod = paymentClient.findPaymentMethodByMember(request.memberId())
                 .stream()
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> DOES_NOT_EXIST_PAYMENT_METHOD.build(request.memberId()));
 
         MemberAddressReadResponse findMemberAddress = deliveryClient.findAllMemberAddressByMemberId(request.memberId())
                 .stream()
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> DOES_NOT_EXIST_MEMBER_ADDRESS.build(request.memberId()));
 
         ProductOrder order = productOrderRepository.save(
                 ProductOrder.of(
@@ -58,7 +59,8 @@ public class ProductOrderService {
 
     @Transactional
     public ProductOrderDetailReadResponse finishOrder(FinishOrderRequest request) {
-        ProductOrder productOrder = productOrderRepository.findById(request.orderId()).orElseThrow();
+        ProductOrder productOrder = productOrderRepository.findById(request.orderId())
+                .orElseThrow(() -> DOES_NOT_EXIST_PRODUCT_ORDER.build(request.orderId()));
 
         ProductReadResponse product = catalogClient.getProduct(productOrder.getProductId());
 
@@ -103,7 +105,8 @@ public class ProductOrderService {
     }
 
     public ProductOrderDetailReadResponse findOrderDetail(Long productOrderId) {
-        ProductOrder productOrder = productOrderRepository.findById(productOrderId).orElseThrow();
+        ProductOrder productOrder = productOrderRepository.findById(productOrderId)
+                .orElseThrow(() -> DOES_NOT_EXIST_PRODUCT_ORDER.build(productOrderId));
         PaymentReadResponse payment = paymentClient.findPayment(productOrder.getPaymentId());
         DeliveryReadResponse delivery = deliveryClient.findDelivery(productOrder.getDeliveryId());
 

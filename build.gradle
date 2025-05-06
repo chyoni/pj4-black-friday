@@ -36,3 +36,25 @@ allprojects {
         useJUnitPlatform()
     }
 }
+
+tasks.register("cleanSubModules") {
+    dependsOn(
+            ":service:catalog:clean",
+            ":service:delivery:clean",
+            ":service:member:clean",
+            ":service:order:clean",
+            ":service:payment:clean",
+            ":service:search:clean"
+    )
+}
+
+tasks.register("buildOnlySubModules") {
+    dependsOn(
+            ":service:catalog:build",
+            ":service:delivery:build",
+            ":service:member:build",
+            ":service:order:build",
+            ":service:payment:build",
+            ":service:search:build"
+    )
+}

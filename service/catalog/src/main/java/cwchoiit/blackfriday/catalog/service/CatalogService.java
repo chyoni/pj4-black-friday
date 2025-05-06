@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.DOES_NOT_EXIST_PRODUCT;
+import static cwchoiit.blackfriday.exception.BlackFridayExCode.INVALID_STOCK_COUNT;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,7 +47,9 @@ public class CatalogService {
     public void deleteProduct(Long productId) {
         searchClient.removeTagCache(
                 productId,
-                productRepository.findById(productId).orElseThrow().getTags()
+                productRepository.findById(productId)
+                        .orElseThrow(() -> DOES_NOT_EXIST_PRODUCT.build(productId))
+                        .getTags()
         );
         productRepository.deleteById(productId);
         sellerProductRepository.deleteById(productId);
@@ -61,13 +66,16 @@ public class CatalogService {
     }
 
     public ProductReadResponse findProductById(Long productId) {
-        return ProductReadResponse.of(productRepository.findById(productId).orElseThrow());
+        return ProductReadResponse.of(
+                productRepository.findById(productId)
+                        .orElseThrow(() -> DOES_NOT_EXIST_PRODUCT.build(productId))
+        );
     }
 
     public ProductReadResponse decreaseStockCount(Long productId, Long count) {
         Product product = productRepository.findById(productId).orElseThrow();
         if (product.getStockCount() < count) {
-            throw new IllegalArgumentException("Stock count is not enough");
+            throw INVALID_STOCK_COUNT.build(productId, product.getStockCount(), count);
         }
 
         product.decreaseStockCount(count);
