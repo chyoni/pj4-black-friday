@@ -55,3 +55,14 @@ create table seller_product
     product_id bigint not null auto_increment primary key,
     seller_id  bigint not null comment '판매자 ID'
 );
+
+create table product_order
+(
+    product_order_id bigint      not null auto_increment primary key,
+    member_id        bigint      not null comment '주문자 ID',
+    product_id       bigint      not null comment '주문 상품 ID',
+    count            integer     not null comment '주문 수량',
+    status           varchar(50) not null comment '주문 상태',
+    payment_id       bigint      not null comment '결제 ID',
+    delivery_id      bigint      not null comment '배송 ID'
+);
