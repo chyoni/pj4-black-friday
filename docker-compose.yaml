@@ -77,6 +77,17 @@ services:
     networks:
       - black-friday-net
 
+  order-service:
+    hostname: order-service
+    container_name: order-service
+    image: blackfriday-order-service
+    ports:
+      - "8086:8080"
+    depends_on:
+      - mysql
+    networks:
+      - black-friday-net
+
   kafka1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka1
