@@ -16,6 +16,16 @@ public enum BlackFridayExCode {
             "BF-CATALOG-002",
             "Invalid stock count. with productId = %s, current stockCount = %s, requested decrease count = %s"
     ),
+    PRODUCT_SAVE_FAILED(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "BF-CATALOG-003",
+            "Save product failed."
+    ),
+    PRODUCT_REMOVED_FAILED(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "BF-CATALOG-004",
+            "Remove product failed."
+    ),
     DOES_NOT_EXIST_DELIVERY(
             HttpStatus.NOT_FOUND,
             "BF-DELIVERY-001",
@@ -65,6 +75,11 @@ public enum BlackFridayExCode {
             HttpStatus.NOT_FOUND,
             "BF-PRODUCTORDER-001",
             "Product order data does not exist. with orderId = %s"
+    ),
+    INVALID_EVENT_TYPE(
+            HttpStatus.BAD_REQUEST,
+            "BF-EVENT-001",
+            "Invalid event type. with eventType = %s"
     );
 
     private final HttpStatus status;

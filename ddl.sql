@@ -66,3 +66,11 @@ create table product_order
     payment_id       bigint comment '결제 ID',
     delivery_id      bigint comment '배송 ID'
 );
+
+create table outbox
+(
+    outbox_id bigint not null auto_increment primary key,
+    event_type varchar(50) not null comment '이벤트 타입',
+    payload longtext not null comment '이벤트 데이터',
+    created_at datetime not null comment '생성 시간'
+);
