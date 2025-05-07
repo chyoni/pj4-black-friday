@@ -9,3 +9,6 @@ include ':service:order'
 
 include ':common:exception'
 include ':common:response'
+include ':common:event'
+include ':common:serializer'
+include ':common:outbox'

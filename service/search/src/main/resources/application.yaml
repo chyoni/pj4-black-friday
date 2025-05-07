@@ -6,6 +6,14 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+  kafka:
+    bootstrap-servers: 127.0.0.1:19092,127.0.0.1:19093,127.0.0.1:19094
+    consumer:
+      group-id: search-product-cache-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
 
 ---
 
@@ -17,3 +25,11 @@ spring:
     redis:
       host: redis
       port: 6379
+  kafka:
+    bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+    consumer:
+      group-id: search-product-cache-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
