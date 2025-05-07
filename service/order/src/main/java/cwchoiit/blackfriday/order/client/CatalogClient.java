@@ -1,10 +1,12 @@
 package cwchoiit.blackfriday.order.client;
 
 import cwchoiit.blackfriday.order.service.response.ProductReadResponse;
+import cwchoiit.blackfriday.response.ApiResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -25,11 +27,12 @@ public class CatalogClient {
         restClient = RestClient.create(catalogUrl);
     }
 
-    public ProductReadResponse getProduct(Long productId) {
+    public ApiResponse<ProductReadResponse> getProduct(Long productId) {
         return restClient.get()
                 .uri("/api/v1/catalog/products/{productId}", productId)
                 .retrieve()
-                .body(ProductReadResponse.class);
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
     public void decreaseStockCount(Long productId, Long count) {

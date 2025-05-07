@@ -1,7 +1,7 @@
 package cwchoiit.blackfriday.order.controller;
 
 import cwchoiit.blackfriday.order.service.ProductOrderService;
-import cwchoiit.blackfriday.order.service.request.FinishOrderRequest;
+import cwchoiit.blackfriday.order.service.request.ProcessOrderPaymentRequest;
 import cwchoiit.blackfriday.order.service.request.StartOrderRequest;
 import cwchoiit.blackfriday.order.service.response.ProductOrderDetailReadResponse;
 import cwchoiit.blackfriday.order.service.response.ProductOrderReadResponse;
@@ -26,8 +26,8 @@ public class ProductOrderController {
     }
 
     @PostMapping("/finish-order")
-    public ResponseEntity<ApiResponse<ProductOrderDetailReadResponse>> finishOrder(@RequestBody FinishOrderRequest request) {
-        return ResponseEntity.ok(ApiResponse.ok(productOrderService.finishOrder(request)));
+    public ResponseEntity<ApiResponse<ProductOrderDetailReadResponse>> finishOrder(@RequestBody ProcessOrderPaymentRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(productOrderService.processOrderPayment(request)));
     }
 
     @GetMapping("/members/{memberId}/orders")

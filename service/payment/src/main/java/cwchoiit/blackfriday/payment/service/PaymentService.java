@@ -1,5 +1,8 @@
 package cwchoiit.blackfriday.payment.service;
 
+import cwchoiit.blackfriday.event.EventType;
+import cwchoiit.blackfriday.event.payload.impl.PaymentResponseEventPayload;
+import cwchoiit.blackfriday.outbox.OutboxEventPublisher;
 import cwchoiit.blackfriday.payment.adapter.PaymentProcessor;
 import cwchoiit.blackfriday.payment.entity.Payment;
 import cwchoiit.blackfriday.payment.entity.PaymentMethod;
@@ -28,6 +31,7 @@ public class PaymentService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentRepository paymentRepository;
     private final List<PaymentProcessor<?>> paymentProcessors;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Transactional
     public PaymentMethodReadResponse registerPaymentMethod(RegisterPaymentMethodRequest request) {
@@ -52,7 +56,23 @@ public class PaymentService {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(request.paymentMethodId())
                 .orElseThrow(() -> DOES_NOT_EXIST_PAYMENT_METHOD_BY_PAYMENT_METHOD_ID.build(request.paymentMethodId()));
         PaymentMethodType currentMethod = PaymentMethodType.findBy(paymentMethod.getMethodType());
-        return PaymentReadResponse.of(processPay(request, currentMethod, paymentMethod));
+        Payment payment = processPay(request, currentMethod, paymentMethod);
+
+        outboxEventPublisher.publish(
+                EventType.PAYMENT_RESPONSE,
+                PaymentResponseEventPayload.builder()
+                        .paymentId(payment.getPaymentId())
+                        .memberId(payment.getMemberId())
+                        .orderId(payment.getOrderId())
+                        .amountKrw(payment.getAmountKrw())
+                        .methodType(payment.getMethodType().name())
+                        .paymentPayload(payment.getPaymentPayload())
+                        .status(payment.getPaymentStatus().name())
+                        .referenceCode(payment.getReferenceCode())
+                        .build()
+        );
+
+        return PaymentReadResponse.of(payment);
     }
 
     public List<PaymentMethodReadResponse> findPaymentMethodByUser(Long memberId) {

@@ -4,4 +4,6 @@ dependencies {
 
     implementation project(":common:exception")
     implementation project(":common:response")
+    implementation project(":common:outbox")
+    implementation project(":common:event")
 }

@@ -1,5 +1,6 @@
-package cwchoiit.blackfriday.event.payload;
+package cwchoiit.blackfriday.event.payload.impl;
 
+import cwchoiit.blackfriday.event.payload.EventPayload;
 import lombok.*;
 
 import java.util.List;

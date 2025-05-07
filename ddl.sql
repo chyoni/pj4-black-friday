@@ -64,7 +64,8 @@ create table product_order
     count            integer     not null comment '주문 수량',
     status           varchar(50) not null comment '주문 상태',
     payment_id       bigint comment '결제 ID',
-    delivery_id      bigint comment '배송 ID'
+    delivery_id      bigint comment '배송 ID',
+    delivery_address varchar(255) not null comment '주문 배송지'
 );
 
 create table outbox

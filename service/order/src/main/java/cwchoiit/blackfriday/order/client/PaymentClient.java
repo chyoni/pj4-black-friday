@@ -3,8 +3,9 @@ package cwchoiit.blackfriday.order.client;
 import cwchoiit.blackfriday.order.service.request.ProcessPaymentRequest;
 import cwchoiit.blackfriday.order.service.response.PaymentMethodReadResponse;
 import cwchoiit.blackfriday.order.service.response.PaymentReadResponse;
+import cwchoiit.blackfriday.response.ApiResponse;
 import jakarta.annotation.PostConstruct;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,25 +29,28 @@ public class PaymentClient {
         restClient = RestClient.create(paymentUrl);
     }
 
-    public List<PaymentMethodReadResponse> findPaymentMethodByMember(Long memberId) {
+    public ApiResponse<List<PaymentMethodReadResponse>> findPaymentMethodByMember(Long memberId) {
         return restClient.get()
                 .uri("/api/v1/payment/methods/members/{memberId}", memberId)
                 .retrieve()
-                .body(new ParameterizedTypeReference<>() {});
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
-    public PaymentReadResponse processPayment(Long memberId, Long orderId, Long amountKrw, Long paymentMethodId) {
+    public ApiResponse<PaymentReadResponse> processPayment(Long memberId, Long orderId, Long amountKrw, Long paymentMethodId) {
         return restClient.post()
                 .uri("/api/v1/payment/process-payment")
                 .body(new ProcessPaymentRequest(memberId, orderId, amountKrw, paymentMethodId))
                 .retrieve()
-                .body(PaymentReadResponse.class);
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
-    public PaymentReadResponse findPayment(Long paymentId) {
+    public ApiResponse<PaymentReadResponse> findPayment(Long paymentId) {
         return restClient.get()
                 .uri("/api/v1/payment/{paymentId}", paymentId)
                 .retrieve()
-                .body(PaymentReadResponse.class);
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 }
