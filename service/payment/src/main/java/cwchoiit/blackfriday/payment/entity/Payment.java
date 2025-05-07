@@ -56,7 +56,7 @@ public class Payment {
         payment.amountKrw = amountKrw;
         payment.methodType = methodType;
         payment.paymentPayload = paymentPayload;
-        payment.paymentStatus = PaymentStatus.REQUESTED;
+        payment.paymentStatus = PaymentStatus.COMPLETED;
         payment.referenceCode = referenceCode;
         return payment;
     }

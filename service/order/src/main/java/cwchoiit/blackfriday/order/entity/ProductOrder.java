@@ -37,12 +37,16 @@ public class ProductOrder {
     @Column(name = "delivery_id")
     private Long deliveryId;
 
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
     public static ProductOrder of(Long memberId,
                                   Long productId,
                                   Long count,
                                   OrderStatus status,
                                   Long paymentId,
-                                  Long deliveryId) {
+                                  Long deliveryId,
+                                  String deliveryAddress) {
         ProductOrder productOrder = new ProductOrder();
         productOrder.memberId = memberId;
         productOrder.productId = productId;
@@ -50,6 +54,7 @@ public class ProductOrder {
         productOrder.status = status;
         productOrder.paymentId = paymentId;
         productOrder.deliveryId = deliveryId;
+        productOrder.deliveryAddress = deliveryAddress;
         return productOrder;
     }
 

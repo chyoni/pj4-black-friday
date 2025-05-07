@@ -2,7 +2,7 @@ package cwchoiit.blackfriday.search.eventhandler;
 
 import cwchoiit.blackfriday.event.Event;
 import cwchoiit.blackfriday.event.EventType;
-import cwchoiit.blackfriday.event.payload.ProductCreatedEventPayload;
+import cwchoiit.blackfriday.event.payload.impl.ProductCreatedEventPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

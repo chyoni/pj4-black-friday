@@ -76,6 +76,11 @@ public enum BlackFridayExCode {
             "BF-PRODUCTORDER-001",
             "Product order data does not exist. with orderId = %s"
     ),
+    INVALID_PRODUCT_ORDER_STATUS(
+            HttpStatus.BAD_REQUEST,
+            "BF-PRODUCTORDER-002",
+            "Invalid product order status. requested status = %s"
+    ),
     INVALID_EVENT_TYPE(
             HttpStatus.BAD_REQUEST,
             "BF-EVENT-001",
