@@ -38,6 +38,32 @@ allprojects {
         useJUnitPlatform()
         finalizedBy('jacocoTestReport')
     }
+
+    jacocoTestReport {
+        dependsOn('test')
+        reports {
+            xml.required = true
+            html.required = true
+        }
+        finalizedBy('jacocoTestCoverageVerification')
+    }
+
+    check.dependsOn jacocoTestCoverageVerification
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'BUNDLE'
+                includes = ['cwchoiit.blackfriday.order.service.*']
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.99
+                }
+            }
+        }
+    }
 }
 
 tasks.register("cleanSubModules") {
@@ -60,25 +86,4 @@ tasks.register("buildOnlySubModules") {
             ":service:payment:build",
             ":service:search:build"
     )
-}
-
-jacocoTestReport {
-    dependsOn('test')
-    finalizedBy('jacocoTestCoverageVerification')
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            element = 'BUNDLE'
-
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.95
-            }
-
-            includes = ['cwchoiit.blackfriday.order.service.**']
-        }
-    }
 }
