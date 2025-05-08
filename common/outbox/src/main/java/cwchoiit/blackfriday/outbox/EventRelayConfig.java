@@ -44,9 +44,9 @@ public class EventRelayConfig {
     @Bean
     public Executor eventRelayPublishEventExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(50);
-        executor.setQueueCapacity(100);
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(200);
+        executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("event-relay-publish-event-");
         return executor;
     }

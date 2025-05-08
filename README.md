@@ -8,6 +8,7 @@
 
 - EDA 기반으로 비동기 이벤트 처리 및 마이크로서비스 아키텍처 설계
 - 블랙프라이데이와 같은 급격한 사용자 몰림 현상을 처리할 수 있는 아키텍처 설계
+- 상품 주문 + 상품 주문 완료가 하나의 트랜잭션으로 TPS 1000 이상을 목표
 - E-Commerce 시스템 구현
 - Redis, Kafka, Cassandra 집중 탐구 프로젝트
 
@@ -50,10 +51,25 @@
 |              | 결제 조회     | ✅  |
 | **Search**   | 상품 조회     | ✅  |
 |              | 상품 캐싱     | ✅  |
+
 ---
 
 ## 🏛️ Architecture
 
 ![Architecture Preview](docs/archi.png)
+
+---
+
+## 🏛️ Performance Testing
+
+![Performance Preview](docs/performance.png)
+
+| 지표          | 수치     | 비고 |
+|-------------|--------|----|
+| **Samples** | 42251  |    |
+| **TPS**     | 1295.8 |    |
+| **Average** | 203 ms |    |
+| **Max**     | 2 sec  |    |
+| **Min**     | 4 ms   |    |
 
 ---
