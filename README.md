@@ -64,12 +64,14 @@
 
 ![Performance Preview](docs/performance.png)
 
-| 지표          | 수치     | 비고 |
-|-------------|--------|----|
-| **Samples** | 42251  |    |
-| **TPS**     | 1295.8 |    |
-| **Average** | 203 ms |    |
-| **Max**     | 2 sec  |    |
-| **Min**     | 4 ms   |    |
+| 지표                            | 수치     | 비고            |
+|-------------------------------|--------|---------------|
+| **Number of Threads (Users)** | 500    | Infinite Loop |
+| **Ramp-up**                   | 30     |               |
+| **Samples**                   | 42251  |               |
+| **TPS**                       | 1295.8 |               |
+| **Average**                   | 203 ms |               |
+| **Max**                       | 2 sec  |               |
+| **Min**                       | 4 ms   |               |
 
 ---
